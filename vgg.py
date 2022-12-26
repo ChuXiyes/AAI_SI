@@ -15,19 +15,19 @@ class VGG:
         # 添加卷积层和最大池化层
         model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=self.input_shape))
         model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same'))
-        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
 
         model.add(tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
         model.add(tf.keras.layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
-        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
 
         model.add(tf.keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
         model.add(tf.keras.layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
-        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
 
         model.add(tf.keras.layers.Conv2D(512, (3, 3), activation='relu', padding='same'))
         model.add(tf.keras.layers.Conv2D(512, (3, 3), activation='relu', padding='same'))
-        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+        model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=2, padding='same'))
 
         # self attention
 
@@ -35,8 +35,9 @@ class VGG:
         # model.add(tf.keras.layers.AveragePooling2D(pool_size=(2, 2)))
         # 添加全连接层
         model.add(tf.keras.layers.Flatten())
-        model.add(tf.keras.layers.Dense(256, activation='relu'))
-        model.add(tf.keras.layers.Dense(1251, activation='relu'))
+        model.add(tf.keras.layers.Dense(4096, activation='relu'))
+        #model.add(tf.keras.layers.Dropout(0.5))
+        model.add(tf.keras.layers.Dense(4096, activation='relu'))
         model.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
 
         model.summary()
@@ -51,8 +52,8 @@ class VGG:
     def predict(self,mfccs):
         return self.model.predict(mfccs)
 
-vgg = VGG((300,40 , 1), 3)
-vgg.compile_model(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+#vgg = VGG((300,40 , 1), 3)
+#vgg.compile_model(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 # vgg.fit(X_train, y_train, batch_size=32, epochs=10, validation_data=(X_test, y_test))
 
 
