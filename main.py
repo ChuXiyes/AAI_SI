@@ -18,13 +18,15 @@ y = []
 # Loop through each speaker folder
 for speaker_id, speaker_folder in enumerate(os.listdir(train_path)):
     # Loop through each audio file in the speaker folder e.g. spk001
+    id = speaker_folder[3:]
+    id = int(id)
     for audio_file in os.listdir(os.path.join(train_path, speaker_folder)): # train\spk001
         # Load the audio file and extract the features
         audio, sample_rate = librosa.load(os.path.join(train_path, speaker_folder, audio_file))
         mfcc = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc)
         # Add the features and label to the list
         X.append(mfcc)
-        y.append(speaker_id)
+        y.append(id)
 
 # Print the shape of the MFCC features
 print(mfcc.shape)
@@ -45,7 +47,7 @@ y = np.array(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Convert the labels to one-hot encoding
-num_classes = len(set(y))
+num_classes = len(set(y)) + 1
 y_train = tf.keras.utils.to_categorical(y_train, num_classes)
 y_test = tf.keras.utils.to_categorical(y_test, num_classes)
 
@@ -93,7 +95,7 @@ def predict(model, test_folder):
             # Get the filename of the audio file
             filename = os.listdir(test_folder)[i]
             # Increment the prediction value by one
-            prediction += 1
+            # prediction += 1
             # Format the prediction value as a three-digit string with leading zeros
             prediction_str = str(prediction).zfill(3)
             # Write the filename and prediction to the file
